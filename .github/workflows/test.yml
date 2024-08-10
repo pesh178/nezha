@@ -80,8 +80,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ steps.tag.outputs.release_tag }}
-          release_name: dashboard-${{ env.ARTIFACT_NAME }}
+          tag: ${{ steps.tag.outputs.release_tag }}
+          #release_name: dashboard-${{ env.ARTIFACT_NAME }}
           body: "Automated release with artifacts for commit ${{ github.sha }}"
           draft: false
           prerelease: false
