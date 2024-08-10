@@ -80,6 +80,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
+          artifacts: /home/runner/work/nezha/nezha/dist
           tag: ${{ steps.tag.outputs.release_tag }}
           name: dashboard-${{ env.ARTIFACT_NAME }}
           body: "Automated release with artifacts for commit ${{ github.sha }}"
