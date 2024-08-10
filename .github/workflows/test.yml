@@ -2,6 +2,8 @@ name: Run Tests
 
 on:
   push:
+    tags:
+      - '*'
     branches:
       - master
     paths:
@@ -72,7 +74,7 @@ jobs:
       - name: Generate release tag
         id: tag
         run: |
-          echo "release_tag=generate_$(date +"%Y.%m.%d_%H-%M")" >> $GITHUB_OUTPUT
+          echo "release_tag=$(date +"%Y.%m.%d")" >> $GITHUB_OUTPUT
       - name: Create Release
         uses: ncipollo/release-action@v1
         env:
