@@ -69,13 +69,17 @@ jobs:
         with:
           name: dashboard-${{ env.ARTIFACT_NAME }}
           path: /home/runner/work/nezha/nezha/dist
+      - name: Generate release tag
+        id: tag
+        run: |
+          echo "release_tag=generate_$(date +"%Y.%m.%d_%H-%M")" >> $GITHUB_OUTPUT
       - name: Create Release
         uses: ncipollo/release-action@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.sha }}
-          release_name: Nezha Release - ${{ github.sha }}
+          tag_name: ${{ steps.tag.outputs.release_tag }}
+          release_name: dashboard-${{ env.ARTIFACT_NAME }}
           body: "Automated release with artifacts for commit ${{ github.sha }}"
           draft: false
           prerelease: false
