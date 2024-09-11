@@ -12,10 +12,18 @@ on:
       - "go.sum"
       - "resource/**"
       - ".github/workflows/test.yml"
+  pull_request:
+    branches:
+      - master
 
 jobs:
   tests:
-    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+      matrix:
+        os: [ubuntu, windows, macos]
+        
+    runs-on: ${{ matrix.os }}-latest
     env:
       GO111MODULE: on
     strategy:
@@ -40,13 +48,20 @@ jobs:
           name=$(echo -n "$name" | sed -e 's/[ \t:\/\\"<>|*?]/-/g' -e 's/--*/-/g')
           echo "ARTIFACT_NAME=$name" >> $GITHUB_ENV
       - uses: actions/checkout@v4
+
       - uses: actions/setup-go@v5
         with:
-          go-version: "^1.21.3"
+          go-version: "1.21.x"
+          
       - name: Unit test
         run: |
           go test -v ./...
+          
+      - name: Build test
+        run: go build -v ./cmd/dashboard
+          
       - name: Run Gosec Security Scanner
+        if: runner.os == 'Linux'
         uses: securego/gosec@master
         with:
           args: --exclude=G104,G402 ./...
